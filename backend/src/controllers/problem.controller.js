@@ -75,7 +75,7 @@ const createProblem = async (req, res) => {
       return res.status(201).json({
         success: true,
         message: "Problem created successfully",
-        data: newProblem,
+        problem: newProblem,
       });
     }
   } catch (error) {
@@ -87,15 +87,147 @@ const createProblem = async (req, res) => {
   }
 };
 
-const getAllProblems = async (req, res) => {};
+const getAllProblems = async (req, res) => {
+  try {
+    const problems = await db.problem.findMany();
+    if (!problems || problems.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No problems found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Problems fetched successfully",
+      problems,
+    });
+  } catch (error) {
+    console.error("Error fetching problems:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
 
-const getProblemById = async (req, res) => {};
+const getProblemById = async (req, res) => {
+  const { id } = req.params;
 
-const updateProblem = async (req, res) => {};
+  try {
+    const problem = await db.problem.findUnique({
+      where: { id },
+    });
 
-const deleteProblem = async (req, res) => {};
+    if (!problem) {
+      return res.status(404).json({
+        success: false,
+        message: "Problem not found",
+      });
+    }
 
-const getAllProblemsSolvedByUser = async (req, res) => {};
+    return res.status(200).json({
+      success: true,
+      message: "Problem fetched successfully",
+      problem,
+    });
+  } catch (error) {
+    console.error("Error fetching problem by ID:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+const updateProblem = async (req, res) => {
+  const { id } = req.params;
+  const {
+    title,
+    description,
+    difficulty,
+    tags,
+    examples,
+    constraints,
+    testCases,
+    codeSnippet,
+    referenceSolutions,
+  } = req.body;
+
+  try {
+    const problem = await db.problem.findUnique({
+      where: { id },
+    });
+
+    if (!problem) {
+      return res.status(404).json({
+        success: false,
+        message: "Problem not found",
+      });
+    }
+
+    const updatedProblem = await db.problem.update({
+      where: { id },
+      data: {
+        title,
+        description,
+        difficulty,
+        tags,
+        examples,
+        constraints,
+        testCases,
+        codeSnippet,
+        referenceSolutions,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Problem updated successfully",
+      problem: updatedProblem,
+    });
+  } catch (error) {
+    console.error("Error updating problem:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+const deleteProblem = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const problem = await db.problem.findUnique({
+      where: { id },
+    });
+
+    if (!problem) {
+      return res.status(404).json({
+        success: false,
+        message: "Problem not found",
+      });
+    }
+
+    await db.problem.delete({
+      where: { id },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Problem deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting problem:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+const getAllProblemsSolvedByUser = async (req, res) => {
+  
+};
 
 export {
   createProblem,
