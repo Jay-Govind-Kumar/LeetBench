@@ -12,7 +12,7 @@ import {
 const problemRouter = Router();
 
 problemRouter.post("/create-problem", authToken, authAdmin, createProblem);
-problemRouter.get("get-all-problems", authToken, getAllProblems);
+problemRouter.get("/get-all-problems", authToken, getAllProblems);
 problemRouter.get("/get-problem/:id", authToken, getProblemById);
 problemRouter.put("/update-problem/:id", authToken, authAdmin, updateProblem);
 problemRouter.delete(

@@ -65,7 +65,7 @@ export const authAdmin = async (req, res, next) => {
       },
     });
 
-    if (!user || user.role !== "admin") {
+    if (!user || user.role !== "ADMIN") {
       return res.status(403).json({
         success: false,
         message:
