@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 // import routes
 import healthCheckRouter from "./routes/healthcheck.routes.js";
 import authRouter from "./routes/auth.routes.js";
+import problemRouter from "./routes/problem.routes.js";
 
 // default route
 app.get("/", (req, res) => {
@@ -25,5 +26,6 @@ app.get("/", (req, res) => {
 // routes
 app.use("/api/v1/healthcheck", healthCheckRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/problems", problemRouter);
 
 export default app;

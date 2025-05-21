@@ -44,9 +44,38 @@ export const authToken = async (req, res, next) => {
 
     req.user = user;
     next();
-    
   } catch (error) {
     console.error("Error in auth middleware:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+export const authAdmin = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const user = await db.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        role: true,
+      },
+    });
+
+    if (!user || user.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message:
+          "Forbidden - You do not have permission to access this resource",
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error("Error in authAdmin middleware:", error);
     res.status(500).json({
       success: false,
       message: "Internal server error",
