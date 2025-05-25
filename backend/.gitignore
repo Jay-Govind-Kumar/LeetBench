@@ -17,6 +17,3 @@
 
 # OS-specific files
 Thumbs.db
-
-# Prisma auto-generated client code
-/src/generated/
